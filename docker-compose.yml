@@ -1,0 +1,38 @@
+name: docker-task-manager-3
+services:
+  frontend:
+    image: docker-task-manager-frontend
+    build:
+      context: ./client
+    ports: 
+      - 3333:5173
+    environment:
+      VITE_API_URL: http://localhost:5555/api
+  backend:
+    image: docker-task-manager-backend
+    build:
+      context: ./server
+    ports: 
+      - 5555:5000
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      CORS_ORIGIN: http://localhost:3333
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_NAME: task_manager
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+  database:
+    image: postgres:18-alpine
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d task_manager"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: task_manager
+
