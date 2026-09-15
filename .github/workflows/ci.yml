@@ -28,5 +28,5 @@ jobs:
 
       - name: Tag Docker images
         run: |
-          docker tag docker-task-manager-client-2 ghcr.io/yurii010/docker-task-manager-client:latest
-          docker tag docker-task-manager-server-2 ghcr.io/yurii010/docker-task-manager-server:latest
+          docker tag docker-task-manager-frontend:latest ghcr.io/yurii010/docker-task-manager-frontend:latest
+          docker tag docker-task-manager-backend:latest ghcr.io/yurii010/docker-task-manager-backend:latest
