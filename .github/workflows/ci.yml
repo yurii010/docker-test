@@ -12,4 +12,4 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Build Docker images
-        uses: docker compose build
+        run: docker compose build
