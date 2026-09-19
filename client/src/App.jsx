@@ -44,7 +44,7 @@ export function App() {
 
   return (
     <main className="container">
-      <h1>task manager</h1>
+      <h1>Task Manager</h1>
       <TaskForm onCreate={handleCreate} />
       <TaskFilter value={status} onChange={setStatus} />
       {error && <p className="error">{error}</p>}
