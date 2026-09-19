@@ -30,3 +30,27 @@ jobs:
         run: |
           docker tag docker-task-manager-frontend:latest ghcr.io/yurii010/docker-task-manager-frontend:latest
           docker tag docker-task-manager-backend:latest ghcr.io/yurii010/docker-task-manager-backend:latest
+
+      - name: Push Docker images
+        run: |
+          docker push ghcr.io/yurii010/docker-task-manager-frontend:latest
+          docker push ghcr.io/yurii010/docker-task-manager-backend:latest
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy to EC2
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" \
+            "cd ~/docker-task-manager && \
+             docker compose -f compose.staging.yml pull && \
+             docker compose -f compose.staging.yml up -d"
